@@ -11,11 +11,14 @@ Note that if you pass a function it will only be executed when the class is
 initialized, not when a new instance is created.
 
 Reserved words within a class (ie. ones you can't use for method or propety
-names) include: self, super, uber, and inherits.
+names) include: self, super, uber, inherits, this, and caller.
 self refers to the instance, but is only used internally. Use "this" instead.
 super and uber are indirect references to the inherited class. They are used
  to call the parent's version of a method (particularly if you overwrote it).
 inherits is a direct reference to the inherited class. Just in case..
+this (as in this.this) is a reference to what this was applied to the method.
+ Note this.this is ONLY defined if a different this was applied.
+caller is a reference to the function that called this method.
 
 Other special words you may create include: init, name
 init is executed when an instance is created. Its return value is disregarded

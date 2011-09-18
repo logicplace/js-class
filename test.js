@@ -1,5 +1,6 @@
 Class = require("./class.js"); //If using Node.JS
 
+//TODO: Test this.this and this.caller
 P1 = Class({ //Object style definition
 	_name: "P1",
 	tmp: function(){ return "herp"; },

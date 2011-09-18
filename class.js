@@ -23,22 +23,33 @@ THE SOFTWARE.
 function propmeth(cl,nom,x){
 	if(nom != "self"){
 		if(nom == "name")nom = "_name";
-		if(typeof(x) == "function"){
+		/*if(typeof(x) == "function"){
 			cl[nom] = function(){
 				if("self" in this) return x.apply(this.self,arguments);
 				else return x.apply(null,arguments);
 			}
 		}
-		else{
+		else{*/
 			cl[nom] = x;
-		}
+		//}
 		if("prototype" in cl)cl.prototype[nom] = cl[nom];
 	}
 }
 
-function Class(d,i){
-	// Base function
-	var copy,fn = function(){
+function thf(th,x){ //THis Function
+	var old = th[x];
+	th[x] = function(){
+		if(th != this)th.this = this;
+		th.caller = arguments.callee.caller;
+		var ret = old.apply(th,arguments);
+		if(th != this)delete th.this;
+		return ret;
+	}
+}
+
+function noContext(){
+	return function(){
+		this.name = this._name;
 		this.self = this;
 		var tmp = this;
 		while("uber" in tmp){
@@ -47,10 +58,19 @@ function Class(d,i){
 		}
 		delete tmp;
 		
+		for(var x in this){
+			if(typeof(this[x]) == "function")thf(this,x);
+		}
+		
 		if("init" in this){
 			this.init.apply(this,arguments);
 		}
 	}
+}
+
+function Class(d,i){
+	// Base function
+	var copy,fn = noContext();
 	
 	// Do inheritance
 	if(typeof(i) == "function"){
@@ -83,9 +103,13 @@ function Class(d,i){
 	else copy = d;
 	
 	// Copy stuff
-	propmeth(fn,_name,"");
+	propmeth(fn,"_name","");
 	for(var x in copy){
 		propmeth(fn,x,copy[x]);
+		/*if(x != "self"){
+			console.log(x);
+			fn[x] = copy[x];
+		}*/
 	}
 	return fn;
 }
