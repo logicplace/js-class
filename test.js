@@ -2,22 +2,21 @@ Class = require("./class.js"); //If using Node.JS
 
 //TODO: Test this.this and this.caller
 P1 = Class({ //Object style definition
-	_name: "P1",
+	name: "P1",
 	tmp: function(){ return "herp"; },
 	tmp2: function(){ return "herp2"; },
 	test: function(x){ return (this.eep = x); },
-	whoami: function(){ return this.nom; }
+	whoami: function(){ return this.name; },
 });
 
 P2 = Class(function P2(){ //Function style definition
-	this.tmp = function(){ return "derp"; }
-	this.test = function(x){ return (this.aap = x); }
+	this.tmp = function(){ return "derp"; };
+	this.test = function(x){ return (this.aap = x); };
 },P1) //inherits P1
 
-P3 = Class({
-	_name: "P3",
-	tmp: function(){ return "perp"; }
-},P2) //inherits P2
+P3 = Class("P3",[
+	function tmp(){ return "perp"; },
+],P2) //inherits P2
 
 var a = new P1(),
     b = new P2(),
@@ -41,6 +40,15 @@ function testw(code,ob,val,eap){
 }
 
 console.log("let a = new P1(); b = new P2(); c = new P3();");
+
+console.log("==== instanceof P1 ====");
+test("a instanceof P1",true);
+test("b instanceof P1",true);
+test("b instanceof P2",true);
+test("c instanceof P1",true);
+test("c instanceof P2",true);
+test("c instanceof P3",true);
+test("c instanceof Array",false);
 
 console.log("==== *.tmp() - Overrides ====");
 test("a.tmp()","herp");
